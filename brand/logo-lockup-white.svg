@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1880" height="420" viewBox="0 0 1880 420">
+  <defs>
+    <linearGradient id="chainW" gradientUnits="userSpaceOnUse" x1="295" y1="262" x2="729" y2="762">
+      <stop offset="0" stop-color="#4fe0a0"/>
+      <stop offset="1" stop-color="#1fb573"/>
+    </linearGradient>
+  </defs>
+
+  <!-- mark (no background box — for dark surfaces) -->
+  <g transform="translate(40,50) scale(0.3125)">
+    <g stroke="url(#chainW)" stroke-width="44" stroke-linecap="round">
+      <line x1="512" y1="262" x2="728.5" y2="387"/>
+      <line x1="728.5" y1="387" x2="728.5" y2="637"/>
+      <line x1="728.5" y1="637" x2="512" y2="762"/>
+      <line x1="512" y1="762" x2="295.5" y2="637"/>
+      <line x1="295.5" y1="637" x2="295.5" y2="387"/>
+      <line x1="295.5" y1="387" x2="512" y2="262"/>
+    </g>
+    <circle cx="512" cy="262" r="70" fill="#ffffff"/>
+    <circle cx="295.5" cy="387" r="70" fill="#ffffff"/>
+    <circle cx="295.5" cy="637" r="70" fill="#ffffff"/>
+    <circle cx="512" cy="762" r="70" fill="#ffffff"/>
+    <circle cx="728.5" cy="637" r="70" fill="#ffffff"/>
+    <circle cx="728.5" cy="387" r="80" fill="#f5a623"/>
+    <circle cx="728.5" cy="387" r="32" fill="#081c33" opacity="0.3"/>
+    <circle cx="512" cy="512" r="54" fill="url(#chainW)"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="430" y="245" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="800" font-size="160" letter-spacing="-4">
+    <tspan fill="#ffffff">P</tspan><tspan fill="#f5a623">O</tspan><tspan fill="#ffffff">LYMERS</tspan><tspan fill="#4fe0a0">.ONE</tspan>
+  </text>
+  <text x="436" y="330" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="600" font-size="42" letter-spacing="7" fill="#b9c6d6">BY 21 CENTURY POLYMERS · 36 YEARS IN RECYCLING</text>
+</svg>
