@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16456f"/>
+      <stop offset="1" stop-color="#081c33"/>
+    </linearGradient>
+    <linearGradient id="chain" gradientUnits="userSpaceOnUse" x1="295" y1="262" x2="729" y2="762">
+      <stop offset="0" stop-color="#3fd08f"/>
+      <stop offset="1" stop-color="#149a5e"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="0.3" cy="0.25" r="0.9">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.02"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="230" fill="url(#bg)"/>
+  <rect width="1024" height="1024" rx="230" fill="url(#sheen)"/>
+  <!-- polymer chain: hexagon of linked monomer nodes -->
+  <g stroke="url(#chain)" stroke-width="40" stroke-linecap="round">
+    <line x1="512" y1="262" x2="728.5" y2="387"/>
+    <line x1="728.5" y1="387" x2="728.5" y2="637"/>
+    <line x1="728.5" y1="637" x2="512" y2="762"/>
+    <line x1="512" y1="762" x2="295.5" y2="637"/>
+    <line x1="295.5" y1="637" x2="295.5" y2="387"/>
+    <line x1="295.5" y1="387" x2="512" y2="262"/>
+  </g>
+  <!-- bond from chain to the ".one" node -->
+  <circle cx="512" cy="262" r="66" fill="#ffffff"/>
+  <circle cx="295.5" cy="387" r="66" fill="#ffffff"/>
+  <circle cx="295.5" cy="637" r="66" fill="#ffffff"/>
+  <circle cx="512" cy="762" r="66" fill="#ffffff"/>
+  <circle cx="728.5" cy="637" r="66" fill="#ffffff"/>
+  <!-- the ".one" monomer -->
+  <circle cx="728.5" cy="387" r="76" fill="#f5a623"/>
+  <circle cx="728.5" cy="387" r="30" fill="#081c33" opacity="0.25"/>
+  <!-- recycled core -->
+  <circle cx="512" cy="512" r="52" fill="url(#chain)"/>
+</svg>

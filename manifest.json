@@ -1,0 +1,14 @@
+{
+  "name": "Polymers.One — India's Polymer Trading Platform",
+  "short_name": "Polymers.One",
+  "description": "Virgin & recycled polymer prices, marketplace and order tracking by 21 Century Polymers.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#081c33",
+  "theme_color": "#0e2a47",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
