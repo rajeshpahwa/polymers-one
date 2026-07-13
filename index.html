@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polymers.One | India's Polymer Trading Platform</title>
+<style>
+  :root{
+    --navy:#0e2a47;
+    --navy-dark:#081c33;
+    --teal:#149a5e;
+    --teal-dark:#0e7a49;
+    --teal-light:#e7f6ee;
+    --orange:#f5a623;
+    --ink:#12141a;
+    --grey:#5b6472;
+    --grey-light:#eef1f5;
+    --bg:#ffffff;
+    --card:#ffffff;
+    --border:#e3e8ef;
+    --red:#d64545;
+    --green:#1a9e5c;
+    --radius:14px;
+    --shadow:0 6px 24px rgba(14,42,71,.08);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55}
+  img{max-width:100%}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  /* ---------- NAV ---------- */
+  header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .nav{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:26px;padding:14px 24px}
+  .logo{font-size:1.35rem;font-weight:800;letter-spacing:-.5px;color:var(--navy);display:flex;align-items:center;gap:2px;white-space:nowrap}
+  .logo .dot{color:var(--orange)}
+  .logo .one{color:var(--teal)}
+  .logo small{display:block;font-size:.55rem;font-weight:600;color:var(--grey);letter-spacing:.4px;margin-left:6px;align-self:flex-end;padding-bottom:3px}
+  nav.links{display:flex;gap:22px;font-size:.93rem;font-weight:500;color:#333;flex:1}
+  nav.links a{padding:6px 2px;border-bottom:2px solid transparent;transition:.15s}
+  nav.links a:hover,nav.links a.active{color:var(--teal);border-color:var(--teal)}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .btn{border:none;border-radius:999px;padding:10px 22px;font-size:.92rem;font-weight:600;transition:.15s}
+  .btn-outline{background:#fff;border:1.5px solid var(--navy);color:var(--navy)}
+  .btn-outline:hover{background:var(--navy);color:#fff}
+  .btn-primary{background:var(--navy);color:#fff}
+  .btn-primary:hover{background:var(--navy-dark)}
+  .btn-teal{background:var(--teal);color:#fff}
+  .btn-teal:hover{background:var(--teal-dark)}
+  .hamburger{display:none;background:none;border:none;font-size:1.5rem;color:var(--navy)}
+
+  /* ---------- PAGE SECTIONS (SPA views) ---------- */
+  .view{display:none}
+  .view.active{display:block}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+  section{padding:64px 0}
+  h2.sec{font-size:2rem;font-weight:800;letter-spacing:-.5px;margin-bottom:10px;color:var(--ink)}
+  p.sub{color:var(--grey);max-width:640px;margin-bottom:36px}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:56px 0 40px}
+  .toggle-row{display:flex;align-items:center;gap:16px;font-weight:700;font-size:1.05rem;margin-bottom:28px}
+  .switch{width:64px;height:34px;background:var(--navy);border-radius:999px;position:relative;cursor:pointer;transition:.2s;border:none}
+  .switch::after{content:"";position:absolute;top:4px;left:5px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.22s}
+  .switch.sell::after{left:33px}
+  .switch.sell{background:var(--teal)}
+  .toggle-row span{color:#9aa3af;transition:.2s}
+  .toggle-row span.on{color:var(--ink)}
+  .hero h1{font-size:clamp(2.2rem,5.4vw,4.1rem);font-weight:900;letter-spacing:-2px;line-height:1.08;max-width:900px}
+  .hero p.tag{margin-top:18px;font-size:1.15rem;color:var(--grey)}
+  .hero-ctas{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+  .hero-ctas .btn{padding:14px 30px;font-size:1rem}
+
+  /* ticker */
+  .ticker-band{background:var(--navy);color:#fff;overflow:hidden;padding:10px 0;white-space:nowrap}
+  .ticker{display:inline-block;animation:scroll 45s linear infinite}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tk{display:inline-flex;align-items:center;gap:8px;margin:0 26px;font-size:.9rem}
+  .tk b{font-weight:700}
+  .tk .up{color:#5ee0a0}.tk .down{color:#ff9c9c}
+
+  /* intel banner */
+  .intel{background:linear-gradient(105deg,#f2faf7 0%,#e3f4ec 60%,#d8efe6 100%);border:1px solid #d4e9df;border-radius:20px;padding:40px 44px;display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap}
+  .intel h3{font-size:1.7rem;font-weight:800;color:var(--ink)}
+  .intel h3 em{font-style:normal;color:var(--teal)}
+  .intel-feats{display:flex;gap:28px;margin-top:20px;flex-wrap:wrap}
+  .intel-feats div{font-size:.83rem;font-weight:600;color:#2c3540;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+  .intel-feats .ic{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 2px 8px rgba(14,42,71,.1)}
+  .intel-phone{font-size:5rem;filter:drop-shadow(0 10px 20px rgba(14,42,71,.2))}
+
+  /* ---------- STATS ---------- */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+  .stat{background:var(--navy);color:#fff;border-radius:var(--radius);padding:30px 26px;text-align:center}
+  .stat b{display:block;font-size:2.2rem;font-weight:800;color:#fff}
+  .stat span{font-size:.9rem;color:#b9c6d6}
+
+  /* ---------- INDUSTRIES ---------- */
+  .ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+  .ind{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px 22px;transition:.18s;box-shadow:0 2px 8px rgba(14,42,71,.04)}
+  .ind:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--teal)}
+  .ind .em{font-size:1.9rem}
+  .ind h4{margin-top:12px;font-size:1.02rem;font-weight:700}
+  .ind p{font-size:.83rem;color:var(--grey);margin-top:6px}
+
+  /* ---------- 4C ---------- */
+  .fourc{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+  .cc{border-radius:var(--radius);padding:30px 26px;color:#fff;position:relative;overflow:hidden;min-height:170px}
+  .cc h4{font-size:1.35rem;font-weight:800;margin-bottom:8px}
+  .cc p{font-size:.88rem;opacity:.92}
+  .cc .big{position:absolute;right:-10px;bottom:-26px;font-size:6.5rem;font-weight:900;opacity:.12}
+  .cc1{background:linear-gradient(135deg,#0e2a47,#16456f)}
+  .cc2{background:linear-gradient(135deg,#0e9f7d,#0a7a60)}
+  .cc3{background:linear-gradient(135deg,#f5a623,#e08b00)}
+  .cc4{background:linear-gradient(135deg,#4a5568,#2d3748)}
+
+  /* ---------- WHY ---------- */
+  .why-band{background:var(--grey-light);border-radius:24px;padding:54px 48px}
+  .rating-pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 18px;font-weight:700;font-size:.9rem;color:var(--navy);box-shadow:0 2px 10px rgba(14,42,71,.08);margin-bottom:18px}
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:30px}
+  .why{background:#fff;border-radius:var(--radius);padding:26px;box-shadow:0 2px 10px rgba(14,42,71,.05)}
+  .why .em{font-size:1.7rem}
+  .why h4{margin-top:10px;font-weight:700;font-size:1rem}
+  .why p{font-size:.85rem;color:var(--grey);margin-top:6px}
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testi-rail{display:flex;gap:18px;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x mandatory}
+  .testi-rail::-webkit-scrollbar{height:8px}
+  .testi-rail::-webkit-scrollbar-thumb{background:#cfd8e3;border-radius:99px}
+  .testi{min-width:330px;max-width:330px;scroll-snap-align:start;background:var(--navy);color:#fff;border-radius:var(--radius);padding:28px}
+  .testi q{font-size:.95rem;line-height:1.6;display:block;min-height:110px}
+  .testi b{display:block;margin-top:18px;color:#fff}
+  .testi span{font-size:.8rem;color:#a8b8ca}
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:760px}
+  .qa{border-bottom:1px solid var(--border)}
+  .qa button.q{width:100%;background:none;border:none;text-align:left;padding:20px 4px;font-size:1.02rem;font-weight:600;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .qa .chev{transition:.2s;color:var(--teal);font-weight:800}
+  .qa.open .chev{transform:rotate(45deg)}
+  .qa .a{max-height:0;overflow:hidden;transition:.25s ease;color:var(--grey);font-size:.93rem}
+  .qa.open .a{max-height:200px;padding-bottom:20px}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--navy-dark);color:#c4d1df;margin-top:60px}
+  .foot{max-width:1200px;margin:0 auto;padding:54px 24px 30px;display:grid;grid-template-columns:2fr 1fr 1fr 1.6fr;gap:36px}
+  .foot h5{color:#fff;font-size:.95rem;margin-bottom:14px}
+  .foot a{display:block;font-size:.88rem;padding:4px 0;color:#c4d1df}
+  .foot a:hover{color:#fff}
+  .news-row{display:flex;gap:8px;margin-top:12px}
+  .news-row input{flex:1;border-radius:999px;border:none;padding:11px 18px;font-size:.9rem}
+  .copyright{border-top:1px solid rgba(255,255,255,.12);text-align:center;padding:18px;font-size:.8rem;color:#8fa2b5}
+
+  /* ---------- PRICES VIEW ---------- */
+  .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+  .toolbar input[type=search]{padding:11px 18px;border:1.5px solid var(--border);border-radius:999px;font-size:.92rem;min-width:240px}
+  .chip{border:1.5px solid var(--border);background:#fff;border-radius:999px;padding:8px 18px;font-size:.87rem;font-weight:600;color:#39424e}
+  .chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .price-table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  .price-table th{background:var(--navy);color:#fff;text-align:left;padding:14px 16px;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px}
+  .price-table td{padding:14px 16px;border-bottom:1px solid var(--grey-light);font-size:.93rem}
+  .price-table tr:hover td{background:#f7fafc}
+  .grade-name b{display:block}
+  .grade-name small{color:var(--grey)}
+  .pill{display:inline-block;border-radius:999px;padding:3px 12px;font-size:.75rem;font-weight:700}
+  .pill.virgin{background:#e8f0fb;color:#2563ab}
+  .pill.recycled{background:var(--teal-light);color:var(--teal-dark)}
+  .chg.up{color:var(--green);font-weight:700}
+  .chg.down{color:var(--red);font-weight:700}
+  .spark{vertical-align:middle}
+  .live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--green);margin-right:7px;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .table-scroll{overflow-x:auto;border-radius:var(--radius)}
+
+  /* ---------- MARKETPLACE ---------- */
+  .mk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .listing{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 8px rgba(14,42,71,.04);transition:.15s}
+  .listing:hover{box-shadow:var(--shadow);border-color:var(--teal)}
+  .listing .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .listing h4{font-size:1.02rem;font-weight:700}
+  .listing .brand{font-size:.8rem;color:var(--grey)}
+  .listing .meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.78rem;color:#39424e}
+  .listing .meta span{background:var(--grey-light);border-radius:8px;padding:4px 10px}
+  .listing .price{font-size:1.25rem;font-weight:800;color:var(--navy)}
+  .listing .price small{font-size:.75rem;font-weight:500;color:var(--grey)}
+  .listing .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+  .btn-sm{padding:9px 20px;font-size:.85rem}
+  .sell-banner{background:var(--teal-light);border:1.5px dashed var(--teal);border-radius:var(--radius);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+  .sell-banner b{color:var(--teal-dark)}
+
+  /* ---------- ORDERS ---------- */
+  .order-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:18px;box-shadow:0 2px 8px rgba(14,42,71,.04)}
+  .order-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+  .order-head b{font-size:1.05rem}
+  .status-badge{border-radius:999px;padding:5px 14px;font-size:.78rem;font-weight:700}
+  .st-confirmed{background:#e8f0fb;color:#2563ab}
+  .st-dispatched{background:#fdf1dc;color:#b06e00}
+  .st-transit{background:#ece9fd;color:#5b45d6}
+  .st-delivered{background:#e2f6ec;color:#177a48}
+  .timeline{display:flex;gap:0;margin-top:14px}
+  .step{flex:1;text-align:center;position:relative;font-size:.75rem;color:#9aa3af}
+  .step::before{content:"";display:block;width:14px;height:14px;border-radius:50%;background:#d6dde6;margin:0 auto 6px;position:relative;z-index:2}
+  .step::after{content:"";position:absolute;top:6px;left:-50%;width:100%;height:3px;background:#d6dde6;z-index:1}
+  .step:first-child::after{display:none}
+  .step.done{color:var(--teal-dark);font-weight:600}
+  .step.done::before{background:var(--teal)}
+  .step.done::after{background:var(--teal)}
+  .empty{padding:60px 20px;text-align:center;color:var(--grey)}
+  .empty .em{font-size:3rem;display:block;margin-bottom:12px}
+
+  /* ---------- MODAL ---------- */
+  .modal-bg{position:fixed;inset:0;background:rgba(8,28,51,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:18px;max-width:460px;width:100%;padding:30px;position:relative;max-height:90vh;overflow-y:auto}
+  .modal h3{font-size:1.25rem;font-weight:800;margin-bottom:4px}
+  .modal .msub{color:var(--grey);font-size:.88rem;margin-bottom:18px}
+  .modal label{display:block;font-size:.82rem;font-weight:600;margin:14px 0 6px;color:#39424e}
+  .modal input,.modal select,.modal textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:.92rem;font-family:inherit}
+  .modal .x{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.3rem;color:var(--grey)}
+  .modal .btn{width:100%;margin-top:22px;padding:13px}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;border-radius:999px;padding:13px 28px;font-size:.92rem;font-weight:600;box-shadow:0 10px 30px rgba(8,28,51,.35);transition:.3s;z-index:300;opacity:0}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  .wa-fab{position:fixed;bottom:26px;right:26px;width:58px;height:58px;border-radius:50%;border:none;background:#25d366;color:#fff;font-size:1.6rem;box-shadow:0 8px 24px rgba(18,140,70,.45);z-index:150;transition:.15s}
+  .wa-fab:hover{transform:scale(1.08)}
+
+  @media(max-width:900px){
+    nav.links{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;gap:0;padding:10px 24px 18px;border-bottom:1px solid var(--border)}
+    nav.links.open{display:flex}
+    nav.links a{padding:12px 0;border-bottom:1px solid var(--grey-light)}
+    .hamburger{display:block}
+    .nav-cta .btn-outline{display:none}
+    .foot{grid-template-columns:1fr 1fr}
+    .why-band{padding:34px 24px}
+    .intel{padding:28px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header>
+  <div class="nav">
+    <a class="logo" href="#" onclick="go('home');return false">P<span class="dot">O</span>LYMERS<span class="one">.ONE</span><small>BY 21 CENTURY POLYMERS · 36 YEARS IN RECYCLING</small></a>
+    <nav class="links" id="navLinks">
+      <a href="#" data-view="home" class="active" onclick="go('home');return false">Home</a>
+      <a href="#" data-view="prices" onclick="go('prices');return false">Live Prices</a>
+      <a href="#" data-view="market" onclick="go('market');return false">Marketplace</a>
+      <a href="#" data-view="orders" onclick="go('orders');return false">My Orders</a>
+      <a href="#" onclick="go('home','faq');return false">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="btn btn-outline" onclick="openModal('credit')">Apply For Credit</button>
+      <button class="btn btn-primary" onclick="go('market')">Start Trading</button>
+      <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= TICKER ================= -->
+<div class="ticker-band"><div class="ticker" id="ticker"></div></div>
+
+<!-- ================= HOME VIEW ================= -->
+<div class="view active" id="view-home">
+
+  <div class="wrap hero">
+    <div class="intel">
+      <div>
+        <div style="font-weight:800;font-size:.85rem;color:var(--teal-dark);letter-spacing:1px">⬢ POLYINTEL by Polymers.One Labs</div>
+        <h3 style="margin-top:10px">Check any Polymer Grade,<br>decide with <em>Confidence</em></h3>
+        <div class="intel-feats">
+          <div><span class="ic">🔍</span>Verify Grade &amp; MFI</div>
+          <div><span class="ic">🛡️</span>Supplier Screening Score</div>
+          <div><span class="ic">📞</span>Find Verified Sellers</div>
+          <div><span class="ic">📈</span>Track Price Signals</div>
+        </div>
+        <button class="btn btn-teal" style="margin-top:24px" onclick="go('prices')">Explore PolyIntel →</button>
+      </div>
+      <div class="intel-phone">📱</div>
+    </div>
+
+    <div style="margin-top:56px">
+      <div class="toggle-row">
+        <span id="lblBuy" class="on">BUY Polymers</span>
+        <button class="switch" id="modeSwitch" onclick="toggleMode()" aria-label="Toggle buy or sell"></button>
+        <span id="lblSell">SELL Polymers</span>
+      </div>
+      <h1 id="heroTitle">Delivering Polymers from Across the World</h1>
+      <p class="tag" id="heroTag">Shaping the Future of the Polymer Industry with Technology, Logistics &amp; Network.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary" id="heroCta1" onclick="go('market')">Browse Marketplace</button>
+        <button class="btn btn-outline" id="heroCta2" onclick="openModal('onboard')">Buyer Onboarding Form</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <section>
+    <div class="wrap">
+      <h2 class="sec">Our Track Record</h2>
+      <p class="sub">Built on 21 Century Polymers' recycling expertise — sustainability that survives because the economics work. Every claim below is a fact.</p>
+      <div class="stats">
+        <div class="stat"><b data-count="36" data-fmt="plain">0</b><span>Years in Plastic Recycling</span></div>
+        <div class="stat"><b data-count="100" data-fmt="pct">0</b><span>Batches Tested &amp; TDS-Backed</span></div>
+        <div class="stat"><b data-count="3" data-fmt="plain">0</b><span>International Expos — NPE Orlando (2015, 2018) &amp; ArabPlast Dubai (2015)</span></div>
+        <div class="stat"><b data-count="100" data-fmt="plain">0</b><span>Recycled-Cap Benches Across India &amp; the Gulf</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sec">Industries We Serve</h2>
+      <p class="sub">Our range of virgin and recycled polymers includes high-performance materials designed for demanding applications — exceptional strength, durability, and resistance to heat and chemicals.</p>
+      <div class="ind-grid">
+        <div class="ind"><span class="em">📦</span><h4>Rigid Packaging</h4><p>PP, HDPE &amp; PET for containers, caps, crates and pails.</p></div>
+        <div class="ind"><span class="em">🛍️</span><h4>Flexible Packaging</h4><p>LDPE, LLDPE &amp; BOPP films for pouches, wraps and liners.</p></div>
+        <div class="ind"><span class="em">🏠</span><h4>Consumer Goods</h4><p>Household articles, furniture, appliances and toys.</p></div>
+        <div class="ind"><span class="em">👟</span><h4>Footwear</h4><p>EVA, PVC and PU compounds for soles and uppers.</p></div>
+        <div class="ind"><span class="em">🧵</span><h4>Fabric &amp; Raffia</h4><p>PP raffia for woven sacks, FIBC, tarpaulin and ropes.</p></div>
+        <div class="ind"><span class="em">⚡</span><h4>Electrical</h4><p>Engineering polymers for switchgear, cables and housings.</p></div>
+        <div class="ind"><span class="em">🚗</span><h4>Automotive</h4><p>PP compounds, ABS and nylons for interiors and exteriors.</p></div>
+        <div class="ind"><span class="em">💧</span><h4>Water Management</h4><p>HDPE &amp; PVC for pipes, fittings and irrigation systems.</p></div>
+        <div class="ind"><span class="em">♻️</span><h4>Recycled Polymers</h4><p>Certified rPP, rHDPE, rLDPE &amp; rPET granules with traceability.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4C -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sec">4C's Of Polymers.One</h2>
+      <p class="sub">Choosing Polymers.One means embracing a revolution in the polymer industry. Our commitment to your business success is encapsulated in our 4C's.</p>
+      <div class="fourc">
+        <div class="cc cc1"><h4>Cost</h4><p>Transparent, market-linked pricing with zero hidden charges.</p><span class="big">C</span></div>
+        <div class="cc cc2"><h4>Convenience</h4><p>Order in a few clicks on web, app or WhatsApp — dispatch handled end-to-end.</p><span class="big">C</span></div>
+        <div class="cc cc3"><h4>Consistency</h4><p>Reliable supply of 60,000+ grades from 40+ producers, every single week.</p><span class="big">C</span></div>
+        <div class="cc cc4"><h4>Credit</h4><p>Flexible credit lines so working capital never blocks your production.</p><span class="big">C</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21CP TRUST STRIP -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div style="background:linear-gradient(120deg,#0e2a47,#123a5e);border-radius:24px;padding:46px 44px;color:#fff">
+        <div style="font-size:.8rem;font-weight:800;letter-spacing:1.5px;color:#7ee0b0">BACKED BY 21 CENTURY POLYMERS</div>
+        <h2 class="sec" style="color:#fff;margin-top:10px">36 years of turning waste into premium granules</h2>
+        <p style="max-width:720px;color:#c4d5e6">Polymers.One is built on the recycling expertise of 21 Century Polymers — the first Indian recycling company to exhibit in the USA (NPE Orlando, 2015 &amp; 2018) and Dubai (ArabPlast, 2015). We supply appearance-critical and performance-critical applications — paint pails, rigid packaging, cosmetic packaging, toys — exactly where people assume recycled can't go.</p>
+        <div style="display:flex;gap:34px;flex-wrap:wrap;margin-top:26px">
+          <div><b style="font-size:1.5rem">36 years</b><div style="font-size:.83rem;color:#9db8d2">in plastic recycling</div></div>
+          <div><b style="font-size:1.5rem">Every batch</b><div style="font-size:.83rem;color:#9db8d2">tested before dispatch, backed with a TDS</div></div>
+          <div><b style="font-size:1.5rem">NPE · ArabPlast</b><div style="font-size:.83rem;color:#9db8d2">first Indian recycler to exhibit in USA &amp; Dubai</div></div>
+        </div>
+        <button class="btn btn-teal" style="margin-top:28px" onclick="openEnquiry('Hi 21 Century Polymers, I found you via Polymers.One. Please share details for my application.')">💬 Talk to us on WhatsApp</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="why-band">
+        <div class="rating-pill">✅ PROVEN IN APPEARANCE-CRITICAL APPLICATIONS</div>
+        <h2 class="sec">Why Buyers Choose Us</h2>
+        <p class="sub">Forget wasting time — buy polymers in a few clicks!</p>
+        <div class="why-grid">
+          <div class="why"><span class="em">📊</span><h4>Realtime Prices</h4><p>Stay informed with up-to-the-minute polymer pricing across PP, PE, PVC, PET &amp; more.</p></div>
+          <div class="why"><span class="em">⚡</span><h4>Quicker Checkouts</h4><p>Effortlessly expedite purchases with lightning-fast checkout and WhatsApp confirmation.</p></div>
+          <div class="why"><span class="em">🚚</span><h4>Track Orders</h4><p>Monitor every dispatch from producer gate to your factory, step by step.</p></div>
+          <div class="why"><span class="em">📰</span><h4>Industry Updates</h4><p>Stay ahead of the curve with price signals, import parity and market insights.</p></div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:28px" onclick="go('prices')">See Live Prices</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sec">What Our Customers Say</h2>
+      <p class="sub">Trusted by processors, converters and recyclers across India.</p>
+      <div class="testi-rail">
+        <div class="testi"><q>"They are providing us a technology-oriented pricing and delivery system, which is highly efficient — especially in this commodity industry."</q><b>MD, Injection Moulding Unit</b><span>Rigid Packaging · Gujarat</span></div>
+        <div class="testi"><q>"Orders are confirmed within 15–20 minutes, thanks to Polymers.One."</q><b>MD, Packaging Converter</b><span>Woven Sacks · Haryana</span></div>
+        <div class="testi"><q>"We never expected such a platform to rise in such an unregulated industry. Congratulations to the team for building it."</q><b>Director, Polyprints Business</b><span>Flexible Packaging · Rajasthan</span></div>
+        <div class="testi"><q>"Their delivery is very efficient and their rates are also very competitive."</q><b>MD, Sacks &amp; Bags Manufacturer</b><span>FIBC · Punjab</span></div>
+        <div class="testi"><q>"The WhatsApp ordering feature is amazing! Rate check to dispatch in one chat."</q><b>CGO, Irrigation Products Company</b><span>Pipes &amp; Fittings · Maharashtra</span></div>
+        <div class="testi"><q>"Their recycled granules pass our drop tests lot after lot — and the TDS with every batch makes customer approvals easy."</q><b>Purchase Head</b><span>Rigid Packaging Manufacturer · Delhi NCR</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="padding-top:0" id="faq">
+    <div class="wrap">
+      <h2 class="sec">Frequently Asked Questions</h2>
+      <div class="faq" id="faqList">
+        <div class="qa"><button class="q">How can I contact Polymers.One?<span class="chev">+</span></button><div class="a">Reach us on WhatsApp, call our buyer desk, or drop a message from the app — our team responds within 15 minutes during market hours (9am–7pm, Mon–Sat).</div></div>
+        <div class="qa"><button class="q">How can I apply for credit on Polymers.One?<span class="chev">+</span></button><div class="a">Click "Apply For Credit" and share your GST details. Credit terms are assessed case by case and confirmed directly with you — a private conversation, like our pricing.</div></div>
+        <div class="qa"><button class="q">How much time does dispatch take after order confirmation?<span class="chev">+</span></button><div class="a">Ex-stock material dispatches the same day. Producer-direct material dispatches within 24–72 hours depending on plant location. You can track every step in My Orders.</div></div>
+        <div class="qa"><button class="q">Do you charge any additional amount for delivery?<span class="chev">+</span></button><div class="a">No. The price you see is landed at your factory — freight, loading and insurance included. GST is shown separately at checkout.</div></div>
+        <div class="qa"><button class="q">What are the benefits of ordering on "advance" payment terms?<span class="chev">+</span></button><div class="a">Advance orders get priority dispatch, an additional ₹200–500/MT discount, and locked-in pricing even if the market moves up before dispatch.</div></div>
+        <div class="qa"><button class="q">Are recycled granules certified?<span class="chev">+</span></button><div class="a">Yes. All rPP, rHDPE, rLDPE and rPET lots ship with test reports (MFI, density, ash content) and EPR-compliant traceability documentation.</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= PRICES VIEW ================= -->
+<div class="view" id="view-prices">
+  <section>
+    <div class="wrap">
+      <h2 class="sec"><span class="live-dot"></span>Live Polymer Prices</h2>
+      <p class="sub">Indicative basic prices (₹/kg, ex-Delhi NCR), anchored to published market levels · updated <b id="pricesUpdated"></b>. WhatsApp us to lock a rate.</p>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-20px 0 26px">
+        <span style="font-size:.85rem;font-weight:600;color:var(--grey)">Check today's market:</span>
+        <a class="chip" href="https://plastic4trade.com/polymer-price-today-update-list-graph" target="_blank" rel="noopener" style="background:var(--teal);color:#fff;border-color:var(--teal)">Plastic4trade ↗</a>
+        <a class="chip" href="https://www.plastemart.com/polymer-pricelist/pp-iocl/4/33" target="_blank" rel="noopener">Plastemart ↗</a>
+        <a class="chip" href="https://nexizo.ai/polymers-category" target="_blank" rel="noopener">Nexizo ↗</a>
+      </div>
+      <div class="toolbar">
+        <input type="search" id="priceSearch" placeholder="Search grade, e.g. PP Raffia…" oninput="renderPrices()">
+        <button class="chip on" data-cat="all" onclick="setCat(this)">All</button>
+        <button class="chip" data-cat="PP" onclick="setCat(this)">PP</button>
+        <button class="chip" data-cat="PE" onclick="setCat(this)">PE</button>
+        <button class="chip" data-cat="PVC" onclick="setCat(this)">PVC</button>
+        <button class="chip" data-cat="PET" onclick="setCat(this)">PET</button>
+        <button class="chip" data-cat="Styrenics" onclick="setCat(this)">Styrenics</button>
+        <button class="chip" data-cat="Recycled" onclick="setCat(this)">♻️ Recycled</button>
+      </div>
+      <div class="table-scroll">
+      <table class="price-table">
+        <thead><tr><th>Grade</th><th>Type</th><th>Price (₹/kg)</th><th>Day Change</th><th>7-Day Trend</th><th></th></tr></thead>
+        <tbody id="priceBody"></tbody>
+      </table>
+      </div>
+      <p style="margin-top:16px;font-size:.82rem;color:var(--grey)">Prices are market-indicative for planning, not binding quotes. 21 Century Polymers' own recycled granule pricing is always a private conversation — recycled typically prices at 70–90% of comparable virgin, application dependent. Every 21CP batch is tested before dispatch and backed with a Technical Data Sheet.</p>
+    </div>
+  </section>
+</div>
+
+<!-- ================= MARKETPLACE VIEW ================= -->
+<div class="view" id="view-market">
+  <section>
+    <div class="wrap">
+      <h2 class="sec">Marketplace</h2>
+      <p class="sub">Live offers from producers, importers and verified recyclers. Prices are landed at your factory, GST extra.</p>
+      <div class="sell-banner">
+        <div><b>Have material to sell?</b> &nbsp;Post your offer and reach verified buyers in minutes.</div>
+        <button class="btn btn-teal btn-sm" onclick="openModal('sell')">+ Post a Sell Offer</button>
+      </div>
+      <div class="toolbar">
+        <input type="search" id="mkSearch" placeholder="Search grade or brand…" oninput="renderMarket()">
+        <button class="chip on" data-mcat="all" onclick="setMCat(this)">All</button>
+        <button class="chip" data-mcat="Virgin" onclick="setMCat(this)">Virgin</button>
+        <button class="chip" data-mcat="Recycled" onclick="setMCat(this)">♻️ Recycled</button>
+      </div>
+      <div class="mk-grid" id="mkGrid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= ORDERS VIEW ================= -->
+<div class="view" id="view-orders">
+  <section>
+    <div class="wrap">
+      <h2 class="sec">My Orders</h2>
+      <p class="sub">Track every dispatch from producer gate to your factory.</p>
+      <div id="ordersList"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="foot">
+    <div>
+      <div class="logo" style="color:#fff">P<span class="dot">O</span>LYMERS<span class="one">.ONE</span></div>
+      <p style="font-size:.85rem;margin-top:12px;color:#9db0c2">India's technology-first polymer trading platform. Virgin &amp; recycled granules, delivered with intelligence. A 21 Century Polymers initiative.</p>
+      <p style="font-size:.88rem;margin-top:14px">✉️ <a href="mailto:info@21centurypolymers.in" style="display:inline;color:#c4d1df">info@21centurypolymers.in</a><br>🌐 <a href="https://www.21centurypolymers.in" target="_blank" rel="noopener" style="display:inline;color:#c4d1df">www.21centurypolymers.in</a></p>
+      <p style="font-size:.8rem;margin-top:14px;color:#7e93a8">© 2026 Polymers.One · 21 Century Polymers. All rights reserved.<br>All trademarks are the property of their respective owners.</p>
+    </div>
+    <div>
+      <h5>Resources</h5>
+      <a href="#" onclick="go('home','faq');return false">Help &amp; Support</a>
+      <a href="#" onclick="toast('Blog coming soon');return false">Blog</a>
+      <a href="#" onclick="toast('Terms of Use');return false">Terms of Use</a>
+      <a href="#" onclick="toast('Privacy Policy');return false">Privacy Policy</a>
+      <a href="#" onclick="toast('Careers page coming soon');return false">Careers</a>
+    </div>
+    <div>
+      <h5>More</h5>
+      <a href="#" onclick="go('market');return false">Buy Polymers</a>
+      <a href="#" onclick="openModal('sell');return false">Sell Polymers</a>
+      <a href="#" onclick="go('prices');return false">Live Prices</a>
+      <a href="#" onclick="openModal('credit');return false">PolyCredit</a>
+      <a href="#" onclick="go('prices');return false">PolyIntel</a>
+    </div>
+    <div>
+      <h5>Subscribe to our hand-crafted newsletter ❤️ with the latest polymer insights.</h5>
+      <div class="news-row">
+        <input type="email" id="newsEmail" placeholder="name@email.com">
+        <button class="btn btn-teal" onclick="subscribe()">Subscribe</button>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">Made with ♻️ for the Indian polymer industry</div>
+</footer>
+
+<!-- ================= MODALS ================= -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <!-- Buy modal -->
+  <div class="modal" id="modal-buy" style="display:none">
+    <button class="x" onclick="closeModal()">✕</button>
+    <h3>Place Order</h3>
+    <p class="msub" id="buySub"></p>
+    <label>Quantity (MT)</label>
+    <input type="number" id="buyQty" value="10" min="1">
+    <label>Delivery Location</label>
+    <select id="buyLoc"><option>Delhi NCR</option><option>Daman / Silvassa</option><option>Ahmedabad</option><option>Mumbai</option><option>Hyderabad</option><option>Chennai</option><option>Kolkata</option></select>
+    <label>Payment Terms</label>
+    <select id="buyPay"><option>Advance (extra ₹300/MT off)</option><option>7-day credit</option><option>15-day credit</option><option>30-day credit</option></select>
+    <button class="btn btn-primary" onclick="confirmBuy()">Confirm Order</button>
+  </div>
+  <!-- Sell modal -->
+  <div class="modal" id="modal-sell" style="display:none">
+    <button class="x" onclick="closeModal()">✕</button>
+    <h3>Post a Sell Offer</h3>
+    <p class="msub">Your offer goes live to verified buyers after a quick quality check.</p>
+    <label>Grade Name</label>
+    <input type="text" id="sellGrade" placeholder="e.g. rPP Black Granules, MFI 8">
+    <label>Type</label>
+    <select id="sellType"><option>Recycled</option><option>Virgin</option></select>
+    <label>Quantity Available (MT)</label>
+    <input type="number" id="sellQty" value="25" min="1">
+    <label>Expected Price (₹/kg)</label>
+    <input type="number" id="sellPrice" placeholder="e.g. 62">
+    <label>Location</label>
+    <input type="text" id="sellLoc" placeholder="e.g. Sonipat, Haryana">
+    <button class="btn btn-teal" onclick="postSell()">Post Offer</button>
+  </div>
+  <!-- Credit modal -->
+  <div class="modal" id="modal-credit" style="display:none">
+    <button class="x" onclick="closeModal()">✕</button>
+    <h3>Apply For Credit</h3>
+    <p class="msub">Tell us about your business — credit terms are assessed case by case and confirmed directly with you.</p>
+    <label>Company Name</label>
+    <input type="text" id="crCompany" placeholder="Your company">
+    <label>GSTIN</label>
+    <input type="text" id="crGst" placeholder="07AAAAA0000A1Z5">
+    <label>Monthly Polymer Purchase (MT)</label>
+    <input type="number" id="crVol" placeholder="e.g. 100">
+    <button class="btn btn-primary" onclick="applyCredit()">Submit Application</button>
+  </div>
+  <!-- Onboarding modal -->
+  <div class="modal" id="modal-onboard" style="display:none">
+    <button class="x" onclick="closeModal()">✕</button>
+    <h3 id="onboardTitle">Buyer Onboarding</h3>
+    <p class="msub">Tell us about your business and our desk will call you within 15 minutes.</p>
+    <label>Your Name</label>
+    <input type="text" id="obName" placeholder="Full name">
+    <label>Company</label>
+    <input type="text" id="obCompany" placeholder="Company name">
+    <label>Phone / WhatsApp</label>
+    <input type="tel" id="obPhone" placeholder="+91">
+    <label>Primary Polymers</label>
+    <select id="obPoly"><option>PP</option><option>HDPE / LLDPE / LDPE</option><option>PVC</option><option>PET</option><option>Styrenics / Engineering</option><option>Recycled granules</option></select>
+    <button class="btn btn-primary" onclick="submitOnboard()">Submit</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<button class="wa-fab" title="WhatsApp enquiry" onclick="openEnquiry('Hi 21 Century Polymers, I am browsing Polymers.One and have an enquiry.')">💬</button>
+
+<script>
+/* ================= 21CP CONFIG ================= */
+/* Add your WhatsApp number (country code, no +, e.g. "919812345678") to route enquiries
+   to WhatsApp. Leave empty to route enquiries to email instead. */
+const CONFIG = {
+  company: "21 Century Polymers",
+  email:   "info@21centurypolymers.in",
+  site:    "https://www.21centurypolymers.in",
+  wa:      "",
+  /* Google Sheet live prices: in your sheet go to File → Share → Publish to web →
+     select the Prices tab + "Comma-separated values (.csv)" → Publish, then paste the
+     generated link here. Sheet columns: grade, category, type, price, prev, updated.
+     Leave empty to use the built-in price list below. */
+  sheetCsv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJS2pdgaayN-0LC9jVnM7HRlH6iYS7XUNv9NJXyhDQZEGewsfZhf5bif1fIJe6uUpo4ZGtv4UNx6wx/pub?output=csv"
+};
+function enquiryLink(msg){
+  return CONFIG.wa
+    ? `https://wa.me/${CONFIG.wa}?text=${encodeURIComponent(msg)}`
+    : `mailto:${CONFIG.email}?subject=${encodeURIComponent("Polymers.One enquiry")}&body=${encodeURIComponent(msg)}`;
+}
+function openEnquiry(msg){window.open(enquiryLink(msg),"_blank");toast(CONFIG.wa?"Opening WhatsApp…":"Opening email — or WhatsApp us for a faster reply")}
+
+/* ---- Google Sheet live prices ---- */
+let liveSim = true; // random tick simulation; switched off when real sheet data loads
+function parseCsv(text){
+  return text.trim().split(/\r?\n/).map(line=>{
+    const out=[];let cur="",q=false;
+    for(const ch of line){
+      if(ch==='"'){q=!q}
+      else if(ch===","&&!q){out.push(cur);cur=""}
+      else cur+=ch;
+    }
+    out.push(cur);
+    return out.map(s=>s.trim());
+  });
+}
+async function loadSheetPrices(){
+  if(!CONFIG.sheetCsv) return;
+  try{
+    const sep=CONFIG.sheetCsv.includes("?")?"&":"?";
+    const res=await fetch(CONFIG.sheetCsv+sep+"cb="+Date.now());
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const rows=parseCsv(await res.text());
+    const head=rows[0].map(h=>h.toLowerCase());
+    const gi=head.indexOf("grade"),ci=head.indexOf("category"),ti=head.indexOf("type"),
+          pi=head.indexOf("price"),vi=head.indexOf("prev"),ui=head.indexOf("updated");
+    if(gi<0||pi<0) throw new Error("Sheet needs at least 'grade' and 'price' columns");
+    const list=[];
+    for(let i=1;i<rows.length;i++){
+      const r=rows[i], p=parseFloat(r[pi]);
+      if(!r[gi]||isNaN(p)) continue;
+      const prev=(vi>=0&&!isNaN(parseFloat(r[vi])))?parseFloat(r[vi]):p;
+      const rec={g:r[gi],cat:(ci>=0&&r[ci])?r[ci]:"Other",
+                 type:(ti>=0&&/recy/i.test(r[ti]||""))?"Recycled":"Virgin",
+                 p, open:prev, hist:[]};
+      let v=prev;
+      rec.hist=Array.from({length:13},()=>{v+=(p-prev)/13+(Math.random()-.5)*p*.003;return +v.toFixed(2)});
+      rec.hist.push(p);
+      list.push(rec);
+      if(ui>=0&&r[ui]&&list.length===1)document.getElementById("pricesUpdated").textContent=r[ui];
+    }
+    if(!list.length) throw new Error("No valid price rows found");
+    PRICES.length=0;PRICES.push(...list);
+    liveSim=false;
+    renderTicker();renderPrices();
+    toast("✅ Prices loaded from your Google Sheet");
+  }catch(e){
+    console.warn("Google Sheet price load failed:",e);
+    toast("⚠️ Couldn't load Google Sheet prices — showing built-in rates");
+  }
+}
+
+/* ================= DATA ================= */
+/* Indicative market levels, anchored to published India polymer ranges as of 13 Jul 2026
+   (PP ₹105–120, HDPE ₹100–115, LDPE ₹115–130 — OfBusiness/Plastic4trade). Update here as market moves. */
+const PRICES_UPDATED = "13 Jul 2026";
+const PRICES = [
+  {g:"PP Raffia (H030SG)",  cat:"PP",  type:"Virgin",   p:108.5, hist:[]},
+  {g:"PP Injection (AM120N)",cat:"PP", type:"Virgin",   p:110.0, hist:[]},
+  {g:"PPCP (MI3530)",       cat:"PP",  type:"Virgin",   p:114.5, hist:[]},
+  {g:"BOPP Film Grade",     cat:"PP",  type:"Virgin",   p:112.0, hist:[]},
+  {g:"HDPE Blow Moulding",  cat:"PE",  type:"Virgin",   p:106.0, hist:[]},
+  {g:"HDPE Pipe (PE100)",   cat:"PE",  type:"Virgin",   p:105.0, hist:[]},
+  {g:"LLDPE Film (F20S009)",cat:"PE",  type:"Virgin",   p:108.0, hist:[]},
+  {g:"LDPE Heavy Duty Film",cat:"PE",  type:"Virgin",   p:122.5, hist:[]},
+  {g:"PVC Suspension K67",  cat:"PVC", type:"Virgin",   p:78.5,  hist:[]},
+  {g:"PET Bottle Grade IV0.80",cat:"PET",type:"Virgin", p:82.0,  hist:[]},
+  {g:"GPPS Crystal",        cat:"Styrenics",type:"Virgin",p:128.0,hist:[]},
+  {g:"HIPS",                cat:"Styrenics",type:"Virgin",p:134.5,hist:[]},
+  {g:"ABS Natural",         cat:"Styrenics",type:"Virgin",p:158.0,hist:[]},
+  {g:"rPP Granules Natural, MFI 10",cat:"Recycled",type:"Recycled",p:82.0,hist:[]},
+  {g:"rPP Granules Black, MFI 8",cat:"Recycled",type:"Recycled",p:76.0,hist:[]},
+  {g:"rHDPE Granules BM Grade",cat:"Recycled",type:"Recycled",p:78.5,hist:[]},
+  {g:"rLDPE Granules Film Grade",cat:"Recycled",type:"Recycled",p:88.0,hist:[]},
+  {g:"rPET Flakes Hot-Washed Clear",cat:"Recycled",type:"Recycled",p:56.0,hist:[]},
+];
+PRICES.forEach(r=>{let v=r.p*(0.985+Math.random()*.02);r.hist=Array.from({length:14},()=>{v+= (Math.random()-.5)*r.p*.008;return +v.toFixed(2)});r.p=r.hist[r.hist.length-1];r.open=r.hist[r.hist.length-2];});
+
+const SEED_LISTINGS = [
+  {id:1,g:"PP Raffia H030SG",brand:"Reliance",type:"Virgin",mfi:"MFI 3.0",qty:54,loc:"Panipat",p:108.5},
+  {id:2,g:"PPCP MI3530",brand:"IOCL",type:"Virgin",mfi:"MFI 35",qty:32,loc:"Panipat",p:114.5},
+  {id:3,g:"HDPE Blow B5429",brand:"GAIL",type:"Virgin",mfi:"MFI 0.28",qty:68,loc:"Pata, UP",p:106.0},
+  {id:4,g:"LLDPE F20S009",brand:"OPaL",type:"Virgin",mfi:"MFI 0.9",qty:41,loc:"Dahej",p:108.0},
+  {id:5,g:"LDPE 24FS040",brand:"HPCL-Mittal",type:"Virgin",mfi:"MFI 4.0",qty:27,loc:"Bathinda",p:122.5},
+  {id:6,g:"PET Bottle Grade IV 0.80",brand:"Reliance",type:"Virgin",mfi:"IV 0.80",qty:88,loc:"Hazira",p:82.0},
+  {id:7,g:"PVC Suspension K67",brand:"Import · Formosa",type:"Virgin",mfi:"K 67",qty:120,loc:"Nhava Sheva",p:78.5},
+  {id:8,g:"ABS Natural",brand:"Import · LG Chem",type:"Virgin",mfi:"MFI 20",qty:18,loc:"Mundra",p:158.0},
+  {id:9,g:"rPP Granules Natural MFI 10",brand:"21 Century Polymers",type:"Recycled",mfi:"MFI 10 · Ash <1%",qty:40,loc:"Sonipat",p:0,tds:true},
+  {id:10,g:"rPP Granules Black MFI 8",brand:"21 Century Polymers",type:"Recycled",mfi:"MFI 8 · Ash <2%",qty:60,loc:"Sonipat",p:0,tds:true},
+  {id:11,g:"rHDPE Granules Blue BM",brand:"GreenLoop Recyclers",type:"Recycled",mfi:"MFI 0.35",qty:35,loc:"Daman",p:78.5},
+  {id:12,g:"rPET Flakes Hot-Washed",brand:"EcoPoly Industries",type:"Recycled",mfi:"IV 0.72 · Clear",qty:75,loc:"Kanpur",p:56.0},
+];
+const SEED_ORDERS = [
+  {id:"PO-26071",grade:"PP Raffia H030SG · Reliance",qty:27,price:108.5,loc:"Delhi NCR",date:"2026-07-10",step:4},
+  {id:"PO-26066",grade:"rPP Granules Black MFI 8 · 21 Century Polymers",qty:20,price:76.0,loc:"Delhi NCR",date:"2026-07-08",step:3},
+  {id:"PO-26059",grade:"LLDPE F20S009 · OPaL",qty:34,price:108.0,loc:"Ahmedabad",date:"2026-07-05",step:2},
+];
+const STEPS=["Confirmed","Dispatched","In Transit","Delivered"];
+const BADGE=["st-confirmed","st-dispatched","st-transit","st-delivered"];
+
+/* ================= STATE ================= */
+const store=(k,v)=>v===undefined?JSON.parse(localStorage.getItem(k)||"null"):localStorage.setItem(k,JSON.stringify(v));
+let listings = store("p1_listings") || SEED_LISTINGS;
+let orders   = store("p1_orders")   || SEED_ORDERS;
+let cat="all", mcat="all", buyTarget=null;
+
+/* ================= NAV / SPA ================= */
+function go(view,anchor){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("view-"+view).classList.add("active");
+  document.querySelectorAll("nav.links a").forEach(a=>a.classList.toggle("active",a.dataset.view===view));
+  document.getElementById("navLinks").classList.remove("open");
+  if(anchor){setTimeout(()=>document.getElementById(anchor)?.scrollIntoView({behavior:"smooth"}),60)}
+  else window.scrollTo({top:0});
+  if(view==="orders")renderOrders();
+}
+
+/* ================= HERO TOGGLE ================= */
+let sellMode=false;
+function toggleMode(){
+  sellMode=!sellMode;
+  document.getElementById("modeSwitch").classList.toggle("sell",sellMode);
+  document.getElementById("lblBuy").classList.toggle("on",!sellMode);
+  document.getElementById("lblSell").classList.toggle("on",sellMode);
+  document.getElementById("heroTitle").textContent = sellMode
+    ? "Sell Your Polymers to Verified Buyers"
+    : "Delivering Polymers from Across the World";
+  document.getElementById("heroTag").textContent = sellMode
+    ? "Post your offer, get quality-checked, and receive payment on dispatch — zero chasing."
+    : "Shaping the Future of the Polymer Industry with Technology, Logistics & Network.";
+  const c1=document.getElementById("heroCta1"),c2=document.getElementById("heroCta2");
+  if(sellMode){c1.textContent="Post a Sell Offer";c1.onclick=()=>openModal("sell");c2.textContent="Seller Onboarding Form";}
+  else{c1.textContent="Browse Marketplace";c1.onclick=()=>go("market");c2.textContent="Buyer Onboarding Form";}
+}
+
+/* ================= TICKER ================= */
+function renderTicker(){
+  const items=PRICES.map(r=>{
+    const ch=r.p-r.open, cls=ch>=0?"up":"down", arrow=ch>=0?"▲":"▼";
+    return `<span class="tk"><b>${r.g.split("(")[0].trim()}</b> ₹${r.p.toFixed(1)} <span class="${cls}">${arrow} ${Math.abs(ch).toFixed(2)}</span></span>`;
+  }).join("");
+  document.getElementById("ticker").innerHTML=items+items;
+}
+
+/* ================= PRICES ================= */
+function spark(hist,up){
+  const w=110,h=30,min=Math.min(...hist),max=Math.max(...hist),rng=max-min||1;
+  const pts=hist.map((v,i)=>`${(i/(hist.length-1)*w).toFixed(1)},${(h-4-((v-min)/rng)*(h-8)).toFixed(1)}`).join(" ");
+  return `<svg class="spark" width="${w}" height="${h}"><polyline points="${pts}" fill="none" stroke="${up?"#1a9e5c":"#d64545"}" stroke-width="2" stroke-linecap="round"/></svg>`;
+}
+function setCat(el){cat=el.dataset.cat;document.querySelectorAll("[data-cat]").forEach(c=>c.classList.toggle("on",c===el));renderPrices()}
+function renderPrices(){
+  const q=(document.getElementById("priceSearch").value||"").toLowerCase();
+  const rows=PRICES.filter(r=>(cat==="all"||r.cat===cat)&&r.g.toLowerCase().includes(q)).map(r=>{
+    const ch=r.p-r.open,pct=(ch/r.open*100),up=ch>=0;
+    return `<tr>
+      <td class="grade-name"><b>${r.g}</b><small>${r.cat}</small></td>
+      <td><span class="pill ${r.type==="Recycled"?"recycled":"virgin"}">${r.type==="Recycled"?"♻️ Recycled":"Virgin"}</span></td>
+      <td><b>₹${r.p.toFixed(2)}</b></td>
+      <td class="chg ${up?"up":"down"}">${up?"▲":"▼"} ${Math.abs(ch).toFixed(2)} (${Math.abs(pct).toFixed(2)}%)</td>
+      <td>${spark(r.hist,up)}</td>
+      <td><button class="btn btn-teal btn-sm" onclick="enquire('${r.g.replace(/'/g,"\\'")}',${r.p.toFixed(2)})">Enquire</button></td>
+    </tr>`;
+  }).join("");
+  document.getElementById("priceBody").innerHTML=rows||`<tr><td colspan="6" style="text-align:center;color:var(--grey);padding:40px">No grades match your search.</td></tr>`;
+}
+function tick(){
+  if(!liveSim) return;
+  PRICES.forEach(r=>{
+    const drift=(Math.random()-.5)*r.p*.004;
+    r.p=+(r.p+drift).toFixed(2);
+    r.hist.push(r.p);if(r.hist.length>14)r.hist.shift();
+  });
+  renderTicker();
+  if(document.getElementById("view-prices").classList.contains("active"))renderPrices();
+}
+
+/* ================= MARKETPLACE ================= */
+function setMCat(el){mcat=el.dataset.mcat;document.querySelectorAll("[data-mcat]").forEach(c=>c.classList.toggle("on",c===el));renderMarket()}
+function renderMarket(){
+  const q=(document.getElementById("mkSearch").value||"").toLowerCase();
+  const cards=listings.filter(l=>(mcat==="all"||l.type===mcat)&&(l.g+" "+l.brand).toLowerCase().includes(q)).map(l=>`
+    <div class="listing">
+      <div class="top">
+        <div><h4>${l.g}</h4><div class="brand">${l.brand}</div></div>
+        <span class="pill ${l.type==="Recycled"?"recycled":"virgin"}">${l.type==="Recycled"?"♻️ Recycled":"Virgin"}</span>
+      </div>
+      <div class="meta"><span>${l.mfi}</span><span>📍 ${l.loc}</span><span>${l.qty} MT available</span>${l.tds?`<span>📄 TDS with every batch</span>`:""}</div>
+      <div class="row">
+        ${l.p>0
+          ? `<div class="price">₹${l.p.toFixed(1)}<small> /kg landed</small></div>`
+          : `<div class="price" style="font-size:.95rem">Price on request<small style="display:block">typically 70–90% of comparable virgin</small></div>`}
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-teal btn-sm" onclick="listingEnquiry(${l.id})">💬 WhatsApp</button>
+          ${l.p>0?`<button class="btn btn-primary btn-sm" onclick="openBuy(${l.id})">Buy Now</button>`:""}
+        </div>
+      </div>
+    </div>`).join("");
+  document.getElementById("mkGrid").innerHTML=cards||`<div class="empty"><span class="em">🔎</span>No offers match your filters.</div>`;
+}
+function openBuy(id){buyTarget=listings.find(l=>l.id===id);document.getElementById("buySub").textContent=`${buyTarget.g} · ${buyTarget.brand} · ₹${buyTarget.p.toFixed(1)}/kg landed`;openModal("buy")}
+function listingEnquiry(id){const l=listings.find(x=>x.id===id);openEnquiry(`Hi ${CONFIG.company}, I saw "${l.g}" (${l.brand}, ${l.mfi}, ${l.loc}) on Polymers.One. Please share ${l.p>0?"availability and best rate":"your best rate and TDS"} for my application.`)}
+function enquire(grade,price){openEnquiry(`Hi ${CONFIG.company}, please share today's best rate for ${grade} (indicative ₹${price}/kg on Polymers.One) and dispatch time to my location.`)}
+function confirmBuy(){
+  const qty=+document.getElementById("buyQty").value||1;
+  const o={id:"PO-"+(26000+Math.floor(Math.random()*900)+100),grade:`${buyTarget.g} · ${buyTarget.brand}`,qty,price:buyTarget.p,loc:document.getElementById("buyLoc").value,date:new Date().toISOString().slice(0,10),step:1};
+  orders.unshift(o);store("p1_orders",orders);
+  closeModal();toast(`✅ Order ${o.id} confirmed — ${qty} MT. Track it in My Orders.`);
+  setTimeout(()=>go("orders"),900);
+}
+function postSell(){
+  const g=document.getElementById("sellGrade").value.trim();
+  const p=+document.getElementById("sellPrice").value;
+  if(!g||!p){toast("Please fill grade name and price");return}
+  listings.unshift({id:Date.now(),g,brand:"Your Company (pending QC)",type:document.getElementById("sellType").value,mfi:"QC pending",qty:+document.getElementById("sellQty").value||1,loc:document.getElementById("sellLoc").value||"India",p});
+  store("p1_listings",listings);
+  closeModal();go("market");renderMarket();toast("✅ Offer posted! It goes live after quality check.");
+}
+
+/* ================= ORDERS ================= */
+function renderOrders(){
+  const el=document.getElementById("ordersList");
+  if(!orders.length){el.innerHTML=`<div class="empty"><span class="em">📦</span>No orders yet. Head to the Marketplace to place your first order.</div>`;return}
+  el.innerHTML=orders.map(o=>`
+    <div class="order-card">
+      <div class="order-head">
+        <div><b>${o.id}</b> &nbsp;<span style="color:var(--grey);font-size:.85rem">${o.date}</span><div style="font-size:.92rem;margin-top:4px">${o.grade}</div></div>
+        <div style="text-align:right"><span class="status-badge ${BADGE[o.step-1]}">${STEPS[o.step-1]}</span><div style="font-size:.85rem;color:var(--grey);margin-top:6px">${o.qty} MT · ₹${o.price.toFixed(1)}/kg · ${o.loc}</div></div>
+      </div>
+      <div class="timeline">${STEPS.map((s,i)=>`<div class="step ${i<o.step?"done":""}">${s}</div>`).join("")}</div>
+    </div>`).join("");
+}
+
+/* ================= MODALS / MISC ================= */
+function openModal(name){document.getElementById("modalBg").classList.add("show");["buy","sell","credit","onboard"].forEach(m=>document.getElementById("modal-"+m).style.display=m===name?"block":"none")}
+function closeModal(){document.getElementById("modalBg").classList.remove("show")}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),3200)}
+function subscribe(){const e=document.getElementById("newsEmail");if(!e.value.includes("@")){toast("Please enter a valid email");return}toast("❤️ Subscribed! See you in your inbox.");e.value=""}
+function applyCredit(){if(!document.getElementById("crCompany").value){toast("Please enter company name");return}closeModal();toast("✅ Credit application received — decision within 48 hours.")}
+function submitOnboard(){if(!document.getElementById("obPhone").value){toast("Please enter your phone number");return}closeModal();toast("✅ Thanks! Our desk will call you within 15 minutes.")}
+
+/* FAQ accordion */
+document.querySelectorAll(".qa .q").forEach(b=>b.addEventListener("click",()=>b.parentElement.classList.toggle("open")));
+
+/* Animated counters */
+function animateStat(el){
+  if(el.dataset.done)return;el.dataset.done="1";
+  const target=+el.dataset.count,fmt=el.dataset.fmt,t0=performance.now();
+  const iv=setInterval(()=>{
+    const k=Math.min((performance.now()-t0)/1200,1),v=Math.round(target*(1-Math.pow(1-k,3)));
+    el.textContent=fmt==="pct"?v+"%":fmt==="plain"?String(v):v.toLocaleString("en-IN")+"+";
+    if(k>=1)clearInterval(iv);
+  },33);
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;io.unobserve(e.target);animateStat(e.target);
+}),{threshold:.4});
+document.querySelectorAll("[data-count]").forEach(el=>io.observe(el));
+/* fallback for webviews where IntersectionObserver never fires (e.g. zero-height viewports) */
+setTimeout(()=>document.querySelectorAll("[data-count]").forEach(animateStat),1800);
+
+/* init */
+document.getElementById("pricesUpdated").textContent=PRICES_UPDATED;
+renderTicker();renderPrices();renderMarket();renderOrders();
+loadSheetPrices();
+setInterval(tick,3000);
+</script>
+</body>
+</html>
